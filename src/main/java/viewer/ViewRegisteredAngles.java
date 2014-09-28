@@ -12,12 +12,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import mpicbg.spim.data.SequenceDescription;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.algorithm.histogram.DiscreteFrequencyDistribution;
-import net.imglib2.algorithm.histogram.Histogram1d;
-import net.imglib2.algorithm.histogram.Real1dBinMapper;
-import net.imglib2.display.AbstractLinearRange;
-import net.imglib2.display.RealARGBConverter;
+import net.imglib2.histogram.DiscreteFrequencyDistribution;
+import net.imglib2.histogram.Histogram1d;
+import net.imglib2.histogram.Real1dBinMapper;
+import net.imglib2.display.LinearRange;
+import net.imglib2.display.RealARGBColorConverter;
 import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.LinAlgHelpers;
 import net.imglib2.view.Views;
@@ -37,7 +38,7 @@ public class ViewRegisteredAngles implements BrightnessDialog.MinMaxListener
 
 	final SpimViewer viewer;
 
-	final ArrayList< AbstractLinearRange > displayRanges;
+	final ArrayList< LinearRange > displayRanges;
 
 	final BrightnessDialog brightnessDialog;
 
@@ -54,7 +55,7 @@ public class ViewRegisteredAngles implements BrightnessDialog.MinMaxListener
 	@Override
 	public void setMinMax( final int min, final int max )
 	{
-		for ( final AbstractLinearRange r : displayRanges )
+		for ( final LinearRange r : displayRanges )
 		{
 			r.setMin( min );
 			r.setMax( max );
@@ -70,8 +71,9 @@ public class ViewRegisteredAngles implements BrightnessDialog.MinMaxListener
 		final SequenceViewsLoader loader = new SequenceViewsLoader( xmlFilename );
 		final SequenceDescription seq = loader.getSequenceDescription();
 
-		displayRanges = new ArrayList< AbstractLinearRange >();
-		final RealARGBConverter< UnsignedShortType > converter = new RealARGBConverter< UnsignedShortType >( 0, 65535 );
+		displayRanges = new ArrayList< LinearRange >();
+		final RealARGBColorConverter< UnsignedShortType > converter = new RealARGBColorConverter.Imp0< UnsignedShortType >( 0, 65535 );
+		converter.setColor( new ARGBType( 0xffffffff ) );
 		displayRanges.add( converter );
 
 		final ArrayList< SourceAndConverter< ? > > sources = new ArrayList< SourceAndConverter< ? > >();

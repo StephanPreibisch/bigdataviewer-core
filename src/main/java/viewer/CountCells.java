@@ -41,7 +41,8 @@ import net.imglib2.algorithm.region.localneighborhood.Neighborhood;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.TypeIdentity;
 import net.imglib2.display.AbstractLinearRange;
-import net.imglib2.display.RealARGBConverter;
+import net.imglib2.display.LinearRange;
+import net.imglib2.display.RealARGBColorConverter;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -94,7 +95,7 @@ public class CountCells implements BrightnessDialog.MinMaxListener
 
 	final SpimViewer viewer;
 
-	final ArrayList< AbstractLinearRange > displayRanges;
+	final ArrayList< LinearRange > displayRanges;
 
 	final BrightnessDialog brightnessDialog;
 
@@ -121,7 +122,7 @@ public class CountCells implements BrightnessDialog.MinMaxListener
 	@Override
 	public void setMinMax( final int min, final int max )
 	{
-		for ( final AbstractLinearRange r : displayRanges )
+		for ( final LinearRange r : displayRanges )
 		{
 			r.setMin( min );
 			r.setMax( max );
@@ -429,8 +430,9 @@ public class CountCells implements BrightnessDialog.MinMaxListener
 		final SequenceViewsLoader loader = new SequenceViewsLoader( xmlFilename );
 		final SequenceDescription seq = loader.getSequenceDescription();
 
-		displayRanges = new ArrayList< AbstractLinearRange >();
-		final RealARGBConverter< UnsignedShortType > converter = new RealARGBConverter< UnsignedShortType >( 0, 65535 );
+		displayRanges = new ArrayList< LinearRange >();
+		final RealARGBColorConverter< UnsignedShortType > converter = new RealARGBColorConverter.Imp0< UnsignedShortType >( 0, 65535 );
+		converter.setColor( new ARGBType( 0xffffffff ) );
 		displayRanges.add( converter );
 
 		final ArrayList< SourceAndConverter< ? > > sources = new ArrayList< SourceAndConverter< ? > >();

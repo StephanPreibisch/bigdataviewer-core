@@ -39,7 +39,7 @@ import net.imglib2.RealPoint;
 import net.imglib2.RealPositionable;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.ui.TransformEventHandler3D;
-import net.imglib2.ui.TransformListener3D;
+import net.imglib2.ui.TransformListener;
 import net.imglib2.util.LinAlgHelpers;
 import net.imglib2.util.ValuePair;
 import viewer.TextOverlayAnimator.TextPosition;
@@ -52,7 +52,7 @@ import viewer.render.overlay.MultiBoxOverlayRenderer;
 import viewer.render.overlay.SourceInfoOverlayRenderer;
 import viewer.util.AbstractTransformAnimator;
 
-public class SpimViewer implements OverlayRenderer, TransformListener3D, PainterThread.Paintable
+public class SpimViewer implements OverlayRenderer, TransformListener< AffineTransform3D >, PainterThread.Paintable
 {
 	protected ViewerState state;
 

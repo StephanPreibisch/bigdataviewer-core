@@ -17,7 +17,6 @@ import net.imglib2.algorithm.region.hypersphere.HyperSphere;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.io.ImgIOException;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
@@ -31,7 +30,7 @@ import org.w3c.dom.NodeList;
 
 public class CompareCells 
 {
-	public CompareCells( final File xml1, final File xml2, final File image ) throws ImgIOException
+	public CompareCells( final File xml1, final File xml2, final File image )
 	{
 		final Img< FloatType > img;
 		
@@ -198,7 +197,7 @@ public class CompareCells
 		return cells;
 	}
 
-	public static void main( String[] args ) throws ImgIOException
+	public static void main( String[] args )
 	{
 		new CompareCells( 
 				new File( "/Users/preibischs/Documents/Microscopy/HDF5/l1-reconstructed.cells.xml"), 

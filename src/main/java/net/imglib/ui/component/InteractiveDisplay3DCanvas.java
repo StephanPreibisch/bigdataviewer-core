@@ -18,7 +18,7 @@ import javax.swing.JComponent;
 import net.imglib.ui.OverlayRenderer;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.ui.TransformEventHandler3D;
-import net.imglib2.ui.TransformListener3D;
+import net.imglib2.ui.TransformListener;
 
 public class InteractiveDisplay3DCanvas extends JComponent
 {
@@ -31,7 +31,7 @@ public class InteractiveDisplay3DCanvas extends JComponent
 
 	final protected OverlayRenderer renderer;
 
-	final protected TransformListener3D renderTransformListener;
+	final protected TransformListener< AffineTransform3D > renderTransformListener;
 
 	/**
 	 * The {@link BufferedImage} that is actually drawn on the canvas. Depending
@@ -41,7 +41,7 @@ public class InteractiveDisplay3DCanvas extends JComponent
 	 */
 	protected BufferedImage bufferedImage;
 
-	public InteractiveDisplay3DCanvas( final int width, final int height, final OverlayRenderer renderer, final TransformListener3D renderTransformListener )
+	public InteractiveDisplay3DCanvas( final int width, final int height, final OverlayRenderer renderer, final TransformListener< AffineTransform3D > renderTransformListener )
 	{
 		super();
 		setPreferredSize( new Dimension( width, height ) );
@@ -81,7 +81,7 @@ public class InteractiveDisplay3DCanvas extends JComponent
 				tmp.set( tmp.get( 0, 3 ) + w/2, 0, 3 );
 				tmp.set( tmp.get( 1, 3 ) + h/2, 1, 3 );
 				handler.setTransform( tmp );
-				handler.setWindowCenter( w / 2, h / 2 );
+				//handler.setWindowCenter( w / 2, h / 2 );
 				renderTransformListener.transformChanged( tmp );
 				enableEvents( AWTEvent.MOUSE_MOTION_EVENT_MASK );
 
@@ -100,7 +100,7 @@ public class InteractiveDisplay3DCanvas extends JComponent
 		} );
 
 		handler = new TransformEventHandler3D( renderTransformListener );
-		handler.setWindowCenter( width / 2, height / 2 );
+		//handler.setWindowCenter( width / 2, height / 2 );
 		addHandler( handler );
 	}
 
