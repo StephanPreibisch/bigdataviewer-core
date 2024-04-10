@@ -47,6 +47,7 @@ import org.janelia.saalfeldlab.n5.DatasetAttributes;
 import org.janelia.saalfeldlab.n5.N5Exception;
 import org.janelia.saalfeldlab.n5.N5FSReader;
 import org.janelia.saalfeldlab.n5.N5Reader;
+import org.janelia.saalfeldlab.n5.universe.N5Factory;
 
 import bdv.AbstractViewerSetupImgLoader;
 import bdv.ViewerImgLoader;
@@ -123,6 +124,25 @@ public class N5ImageLoader implements ViewerImgLoader, MultiResolutionImgLoader
 		requestedSharedQueue = createdSharedQueue;
 	}
 
+	// TODO: this is a hack, we should support URI instead of baseDir, which is a File
+	// it modifies and cuts of addresses such as s3://janelia-bigstitcher-spark/Stitching/dataset.n5
+	// and turns it into s3:/janelia-bigstitcher-spark/Stitching/dataset.n5/.
+	public static String assembleURI( final File n5File )
+	{
+		String uri = n5File.toString();
+
+		if ( uri.endsWith( "." ) )
+			uri = uri.substring( 0, uri.length() - 1 );
+
+		if ( uri.endsWith( "/" ) )
+			uri = uri.substring( 0, uri.length() - 1 );
+
+		if ( uri.contains( ":/" ) && !uri.contains( "://" ) )
+			uri = uri.replace( ":/", "://" );
+
+		return uri;
+	}
+
 	private void open()
 	{
 		if ( !isOpen )
@@ -134,7 +154,10 @@ public class N5ImageLoader implements ViewerImgLoader, MultiResolutionImgLoader
 
 				try
 				{
-					this.n5 = new N5FSReader( n5File.getAbsolutePath() );
+					if ( n5File.toString().contains( ":/" ) )
+						n5 = new N5Factory().openReader( assembleURI( n5File ) );
+					else // avoid dependency hell if it is a local file
+						n5 = new N5FSReader( n5File.getAbsolutePath() );
 
 					int maxNumLevels = 0;
 					final List< ? extends BasicViewSetup > setups = seq.getViewSetupsOrdered();
