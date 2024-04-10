@@ -47,7 +47,7 @@ public class XmlIoN5ImageLoader implements XmlIoBasicImgLoader< N5ImageLoader >
 		final Element elem = new Element( "ImageLoader" );
 		elem.setAttribute( IMGLOADER_FORMAT_ATTRIBUTE_NAME, "bdv.n5" );
 		elem.setAttribute( "version", "1.0" );
-		elem.addContent( XmlHelpers.pathElement( "n5", imgLoader.getN5File(), basePath ) );
+		elem.addContent( pathElement( "n5", imgLoader.getN5File(), basePath ) );
 		return elem;
 	}
 
@@ -57,5 +57,43 @@ public class XmlIoN5ImageLoader implements XmlIoBasicImgLoader< N5ImageLoader >
 //		final String version = elem.getAttributeValue( "version" );
 		final File path = loadPath( elem, "n5", basePath );
 		return new N5ImageLoader( path, sequenceDescription );
+	}
+
+	/**
+	 * @param basePath if null put the absolute path, otherwise relative to this
+	 */
+	public static Element pathElement( final String name, final File path, final File basePath )
+	{
+		final Element e = new Element( name );
+		if ( basePath == null )
+		{
+			e.setAttribute( "type", "absolute" );
+			e.setText( path.getAbsolutePath() );
+		}
+		else
+		{
+			if ( path.toString().contains( ":/" ) )
+			{
+				e.setAttribute( "type", "absolute" );
+				e.setText( path.toString() );
+			}
+			else
+			{
+				// Try to build a relative path. If can't, make it absolute.
+				final File relativePath = XmlHelpers.getRelativePath( path, basePath );
+				if ( null == relativePath )
+				{
+					e.setAttribute( "type", "absolute" );
+					e.setText( path.getAbsolutePath() );
+				}
+				else
+				{
+					e.setAttribute( "type", "relative" );
+					e.setText( relativePath.getPath() );
+				}
+			}
+		}
+
+		return e;
 	}
 }
