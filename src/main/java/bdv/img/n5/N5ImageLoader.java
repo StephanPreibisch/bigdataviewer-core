@@ -137,6 +137,9 @@ public class N5ImageLoader implements ViewerImgLoader, MultiResolutionImgLoader
 		if ( uri.endsWith( "/" ) )
 			uri = uri.substring( 0, uri.length() - 1 );
 
+		if ( uri.contains( "/." ) )
+			uri = uri.replace( "/.", "" );
+
 		if ( uri.contains( ":/" ) && !uri.contains( "://" ) )
 			uri = uri.replace( ":/", "://" );
 
